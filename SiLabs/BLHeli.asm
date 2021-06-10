@@ -2449,6 +2449,7 @@ t0_int_start:
 ENDIF
 	push	PSW			; Preserve registers through interrupt
 	push	ACC		
+	jnb	Flags1.MOTOR_SPINNING, t0_int_pwm_off_exit ; Dynamic braking? If yes don't switch nFETs off
 	; Check if pwm is on
 	jb	Flags0.PWM_ON, t0_int_pwm_off	; Is pwm on?
 
@@ -7308,6 +7309,9 @@ beep_delay_set:
 
 wait_for_power_on_no_beep:
 	call wait10ms
+	AnFET_On ; dynamic braking, switch all nFETs on
+	BnFET_On
+	CnFET_On
 	mov	A, Rcp_Timeout_Cntd				; Load RC pulse timeout counter value
 	jnz	wait_for_power_on_ppm_not_missing	; If it is not zero - proceed
 

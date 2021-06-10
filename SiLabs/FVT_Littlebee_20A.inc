@@ -98,36 +98,36 @@ P0_INIT		EQU	0FFh
 P0_PUSHPULL	EQU	0
 P0_SKIP		EQU	NOT(1 SHL Rcp_In)
 
-MACRO Get_Rcp_Capture_Values
+Get_Rcp_Capture_Values MACRO
 	mov	Temp1, PCA0CPL0			; Get PCA capture values
 	mov	Temp2, PCA0CPH0
 ENDM
-MACRO Read_Rcp_Int
+Read_Rcp_Int MACRO
 	mov	A, P0
 	jnb	Flags3.PGM_RCP_PWM_POL, ($+4)	; Is pwm polarity negative?
 	cpl	A						; Yes - invert
 ENDM
-MACRO Rcp_Int_Enable
+Rcp_Int_Enable MACRO
 	orl	PCA0CPM0, #01h				; Interrupt enabled
 ENDM
-MACRO Rcp_Int_Disable
+Rcp_Int_Disable MACRO
 	anl	PCA0CPM0, #0FEh			; Interrupt disabled
 ENDM
-MACRO Rcp_Int_First
+Rcp_Int_First MACRO
 	anl	PCA0CPM0, #0CFh			
 	jb	Flags3.PGM_RCP_PWM_POL, ($+6)	; Is pwm polarity positive?
 	orl	PCA0CPM0, #20h				; Capture rising edge
 	jnb	Flags3.PGM_RCP_PWM_POL, ($+6)	; Is pwm polarity negative?
 	orl	PCA0CPM0, #10h				; Capture falling edge
 ENDM
-MACRO Rcp_Int_Second
+Rcp_Int_Second MACRO
 	anl	PCA0CPM0, #0CFh			
 	jb	Flags3.PGM_RCP_PWM_POL, ($+6)	; Is pwm polarity positive?
 	orl	PCA0CPM0, #10h				; Capture falling edge
 	jnb	Flags3.PGM_RCP_PWM_POL, ($+6)	; Is pwm polarity negative?
 	orl	PCA0CPM0, #20h				; Capture rising edge
 ENDM
-MACRO Rcp_Clear_Int_Flag
+Rcp_Clear_Int_Flag MACRO
 	clr 	CCF0						; Clear interrupt flag
 ENDM		
 
@@ -149,73 +149,73 @@ P1_INIT		EQU 	(1 SHL Adc_Ip)			; Setting ADC ip sets it tristate
 P1_PUSHPULL	EQU	(1 SHL AnFET)+(1 SHL BnFET)+(1 SHL CnFET)+(1 SHL ApFET)+(1 SHL BpFET)+(1 SHL CpFET)
 P1_SKIP		EQU	(1 SHL Adc_Ip)
 
-MACRO AnFET_on
+AnFET_on MACRO
 	setb	P1.AnFET
 ENDM
-MACRO AnFET_off
+AnFET_off MACRO
 	clr	P1.AnFET
 ENDM
-MACRO BnFET_on
+BnFET_on MACRO
 	setb	P1.BnFET
 ENDM
-MACRO BnFET_off
+BnFET_off MACRO
 	clr	P1.BnFET
 ENDM
-MACRO CnFET_on
+CnFET_on MACRO
 	setb	P1.CnFET
 ENDM
-MACRO CnFET_off
+CnFET_off MACRO
 	clr	P1.CnFET
 ENDM
-MACRO All_nFETs_Off
+All_nFETs_Off MACRO
 	clr	P1.AnFET
 	clr	P1.CnFET
 	clr	P1.BnFET
 ENDM
 
-MACRO ApFET_on
+ApFET_on MACRO
 	setb	P1.ApFET
 ENDM
-MACRO ApFET_off
+ApFET_off MACRO
 	clr	P1.ApFET
 ENDM
-MACRO BpFET_on
+BpFET_on MACRO
 	setb	P1.BpFET
 ENDM
-MACRO BpFET_off
+BpFET_off MACRO
 	clr	P1.BpFET
 ENDM
-MACRO CpFET_on
+CpFET_on MACRO
 	setb	P1.CpFET
 ENDM
-MACRO CpFET_off
+CpFET_off MACRO
 	clr	P1.CpFET
 ENDM
-MACRO All_pFETs_On
+All_pFETs_On MACRO
 	setb	P1.ApFET
 	setb	P1.CpFET
 	setb	P1.BpFET
 ENDM
-MACRO All_pFETs_Off
+All_pFETs_Off MACRO
 	clr	P1.ApFET
 	clr	P1.CpFET
 	clr	P1.BpFET
 ENDM
-MACRO Damping_FET_On
+Damping_FET_On MACRO
 	mov	A, DampingFET
 	orl	P1, A
 ENDM
 
-MACRO Set_Comp_Phase_A
+Set_Comp_Phase_A MACRO
 	mov	CPT0MX, #10h	; Set comparator multiplexer to phase A
 ENDM
-MACRO Set_Comp_Phase_B
+Set_Comp_Phase_B MACRO
 	mov	CPT0MX, #11h	; Set comparator multiplexer to phase B
 ENDM
-MACRO Set_Comp_Phase_C
+Set_Comp_Phase_C MACRO
 	mov	CPT0MX, #13h	; Set comparator multiplexer to phase C
 ENDM
-MACRO Read_Comp_Out
+Read_Comp_Out MACRO
 	mov	A, CPT0CN		; Read comparator output
 ENDM
 
@@ -231,7 +231,7 @@ P2_PUSHPULL	EQU	(1 SHL DebugPin)
 ;**********************
 ; MCU specific macros *
 ;**********************
-MACRO Interrupt_Table_Definition
+Interrupt_Table_Definition MACRO
 CSEG AT 0				; Code segment start
 	jmp reset
 CSEG AT 0Bh			; Timer0 interrupt	
@@ -244,40 +244,40 @@ CSEG AT 73h			; Timer3 interrupt
 	jmp	t3_int	
 ENDM
 
-MACRO Initialize_Xbar
+Initialize_Xbar MACRO
 	mov	XBR1, #41h	; Xbar enabled, CEX0 routed to pin Rcp_In			
 ENDM
 
-MACRO Initialize_Adc
+Initialize_Adc MACRO
 	mov	REF0CN, #0Eh		; Set vdd (3.3V) as reference. Enable temp sensor and bias
 	mov	ADC0CF, #58h		; ADC clock 2MHz
 	mov	AMX0P, #(8+Adc_Ip)	; Select positive input
 	mov	AMX0N, #11h		; Select negative input as ground
 	mov	ADC0CN, #80h		; ADC enabled
 ENDM
-MACRO Set_Adc_Ip_Volt
+Set_Adc_Ip_Volt MACRO
 	mov	AMX0P, #(8+Adc_Ip)	; Select positive input
 ENDM
-MACRO Set_Adc_Ip_Temp
+Set_Adc_Ip_Temp MACRO
 	mov	AMX0P, #10h		; Select temp sensor input
 ENDM
-MACRO Start_Adc
+Start_Adc MACRO
 	mov	ADC0CN, #90h		; ADC start
 ENDM
-MACRO Get_Adc_Status
+Get_Adc_Status MACRO
 	mov	A, ADC0CN		
 ENDM
-MACRO Read_Adc_Result
+Read_Adc_Result MACRO
 	mov	Temp1, ADC0L
 	mov	Temp2, ADC0H
 ENDM
-MACRO Stop_Adc
+Stop_Adc MACRO
 ENDM
-MACRO Set_RPM_Out
+Set_RPM_Out MACRO
 ENDM
-MACRO Clear_RPM_Out
+Clear_RPM_Out MACRO
 ENDM
-MACRO Set_MCU_Clk_24MHz
+Set_MCU_Clk_24MHz MACRO
 ENDM
-MACRO Set_MCU_Clk_48MHz
+Set_MCU_Clk_48MHz MACRO
 ENDM

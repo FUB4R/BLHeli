@@ -715,7 +715,8 @@ Oversky_MR_20A_Pro_Multi			EQU 231
 ;BESCNO EQU Flycolor_Fairy_30A_Multi
 ;BESCNO EQU FVT_Littlebee_20A_Main
 ;BESCNO EQU FVT_Littlebee_20A_Tail
-;BESCNO EQU FVT_Littlebee_20A_Multi  
+BESCNO EQU FVT_Littlebee_20A_Multi
+; !! BESCNO EQU FVT_Littlebee_20A_Plane
 ;BESCNO EQU FVT_Littlebee_30A_Main
 ;BESCNO EQU FVT_Littlebee_30A_Tail
 ;BESCNO EQU FVT_Littlebee_30A_Multi 

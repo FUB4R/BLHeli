@@ -1,3 +1,9 @@
+This fork switches on all nFETs when the motor is idle (zero throttle). This is useful for gliders/planes to stop the prop from spinning with the airflow. See the following issue for more information :
+
+https://github.com/bitdump/BLHeli/issues/127
+
+-----------------------------------------------------------------
+
 This tree contains the BLHeli assembly code for sensorless brushless motor electronic speed control (ESC) boards.
 It was initially designed for use with Eflite mCP X, but is well suited for other copters/planes.
 
